@@ -1,5 +1,5 @@
 (function() {
-	
+
 	var computedDataArray = [];
 
 	for(var i=0;i<summaryObject.length;i++) {
@@ -8,30 +8,78 @@
 
 		var datapoint = summaryObject[i];
 
-		computedData.date = datapoint.date;
+		computedData.key = datapoint.date;
 
 		var walkingDistance = 0;
 
 		for(var j=0;j<datapoint.summary.length;j++) {
 			var item = datapoint.summary[j];
-
 			var act = item.activity;
-
-
-
 			if (act == "walking") {
 				walkingDistance = walkingDistance + item.distance;
 			}
 		}
 
-		computedData.walkingDistance = walkingDistance;
+		computedData.value = walkingDistance;
 
 		computedDataArray.push(computedData);
+
+	}
+
+
+	var testvalues =d3.values(computedDataArray);
+
+	var testvalues2 = d3.values(testvalues);
+
+
+	for(var ttt = 0;ttt<testvalues.length;ttt++) {
+
+		var testentry = testvalues[ttt];
+
+		var xxxxxx  = 42;
 
 
 	}
 
-	var xx = 42;
 
+	var testdata = d3.values(computedDataArray);
+
+	var maxxx = d3.max(d3.values(computedDataArray));
+
+	var width = 960,
+		height = 500;
+
+	var y = d3.scale.linear()
+		.domain([0,20000])
+		.range([height, 0]);
+
+	var chart = d3.select(".chart")
+		.attr("width", width)
+		.attr("height", height);
+
+	var barWidth = width / computedDataArray.length;
+
+
+	var bar = chart.selectAll("g")
+		.data(computedDataArray)
+		.enter().append("g")
+		.attr("transform", function(d, i) { return "translate(" + i * barWidth + ",0)"; });
+
+	bar.append("rect")
+		.attr("y", function(d) { return y(d.value); })
+		.attr("height", function(d) { return height - y(d.value); })
+		.attr("width", barWidth - 1);
+
+	bar.append("text")
+		.attr("x", barWidth / 2)
+		.attr("y", function(d) { return y(d.value) + 3; })
+		.attr("dy", ".75em")
+		.text(function(d) { return d.value; });
 
 })();
+
+
+function type(d) {
+	d.value = +d.value; // coerce to number
+	return d;
+}
