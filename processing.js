@@ -1,4 +1,7 @@
 (function() {
+	var	parseDate = d3.time.format("%Y-%m").parse;
+	var format = d3.time.format("%Y-%m-%d").parse;
+
 
 	var computedDataArray = [];
 
@@ -8,7 +11,16 @@
 
 		var datapoint = summaryObject[i];
 
-		computedData.key = datapoint.date;
+	//	computedData.key = datapoint.date;
+
+		var comyear = datapoint.date.substring(0,4);
+		var commonth = datapoint.date.substring(4,6);
+		var comday = datapoint.date.substring(6,8);
+
+
+		var newdate = new Date(comyear,commonth,comday);
+
+		computedData.date = comyear + "-" + commonth + "-" +comday;
 
 		var walkingDistance = 0;
 
@@ -46,14 +58,30 @@
 
 	var maxxx = d3.max(d3.values(computedDataArray));
 
+
+
+	computedDataArray.forEach(function(d) {
+		d.date = parseDate(d.date);
+		d.value = +d.value;
+	});
+
+
+
 	var width = 960,
 		height = 500;
 
 	var margin = {top: 20, right: 30, bottom: 30, left: 60};
 
+	var x = d3.scale.ordinal().rangeRoundBands([0,width],.1);
+
 	var y = d3.scale.linear()
 		.domain([0,20000])
 		.range([height, 0]);
+
+	var xAxis = d3.svg.axis()
+		.scale(x)
+		.orient("bottom");
+
 
 
 	var yAxis  = d3.svg.axis()
@@ -70,7 +98,19 @@
 		.attr("class","y axis")
 		.call(yAxis);
 
+	chart.append("g")
+		.attr("class", "x axis")
+		.attr("transform", "translate(0," + height + ")")
+		.call(xAxis)
+		.selectAll("text")
+		.style("text-anchor", "end")
+		.attr("dx", "-.8em")
+		.attr("dy", "-.55em")
+		.attr("transform", "rotate(-90)" );
+
 	var barWidth = width / computedDataArray.length;
+
+
 
 
 	var bar = chart.selectAll("g")
@@ -84,7 +124,7 @@
 		.attr("width", barWidth - 1);
 
 	bar.append("text")
-		.attr("x", barWidth / 2)
+		.attr("x", x.rangeBand() / 2)
 		.attr("y", function(d) { return y(d.value) + 3; })
 		.attr("dy", ".75em")
 		.text(function(d) { return d.value; });
