@@ -49,13 +49,26 @@
 	var width = 960,
 		height = 500;
 
+	var margin = {top: 20, right: 30, bottom: 30, left: 60};
+
 	var y = d3.scale.linear()
 		.domain([0,20000])
 		.range([height, 0]);
 
+
+	var yAxis  = d3.svg.axis()
+		.scale(y)
+		.orient("left");
+
 	var chart = d3.select(".chart")
-		.attr("width", width)
-		.attr("height", height);
+		.attr("width", width + margin.left + margin.right)
+		.attr("height", height + margin.top + margin.bottom)
+		.append("g")
+		.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+	chart.append("g")
+		.attr("class","y axis")
+		.call(yAxis);
 
 	var barWidth = width / computedDataArray.length;
 
