@@ -1,0 +1,33 @@
+.axis text {
+    shape-render: crispEdges;
+    stroke: #000;
+}
+.label{
+    font-size:20px;
+}
+.x text {
+    font-size: 15px;
+
+    stroke: #000;
+}
+.y text {
+    font-size: 10px;
+    shape-render: crispEdges;
+    stroke: #000;
+}
+
+
+.axis path,
+.axis line {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
+}
+.chart rect {
+    fill: steelblue;
+}
+
+.chart text {
+    fill: black;
+    text-anchor: end;
+}

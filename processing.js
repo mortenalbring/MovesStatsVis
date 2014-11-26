@@ -63,15 +63,15 @@ function getDate(d) {
 
 
 
-	var width = 960,
+	var width = 600,
 		height = 500;
 
-	var margin = {top: 20, right: 30, bottom: 100, left: 60};
+	var margin = {top: 20, right: 30, bottom: 100, left: 70};
 
 	var x = d3.time.scale().domain([minDate,maxDate]).range([0,width]);
 
 	var y = d3.scale.linear()
-		.domain([0,20000])
+		.domain([0,18000])
 		.range([height, 0]);
 
 	var xAxis = d3.svg.axis()
@@ -104,6 +104,13 @@ function getDate(d) {
 		.attr("dy", "-.55em")
 		.attr("transform", "rotate(-90)" );
 
+	chart.append("text")
+		.attr("class", "label")
+		.attr("x",-200)
+		.attr("y",-margin.left+15)
+		.text("Steps")
+		.attr("transform","rotate(-90)")
+
 	var barWidth = width / computedDataArray.length;
 
 
@@ -112,18 +119,18 @@ function getDate(d) {
 	var bar = chart.selectAll("g")
 		.data(computedDataArray)
 		.enter().append("g")
-		.attr("transform", function(d, i) { return "translate(" + i * barWidth + ",0)"; });
+		.attr("transform", function(d, j) { return "translate(" + ((j-15)*barWidth) + ",0)"; });
 
 	bar.append("rect")
 		.attr("y", function(d) { return y(d.value); })
 		.attr("height", function(d) { return height - y(d.value); })
 		.attr("width", barWidth - 1);
 
-	bar.append("text")
+/*	bar.append("text")
 		.attr("x", function(d) {return x(d.date)})
 		.attr("y", function(d) { return y(d.value) + 3; })
 		.attr("dy", ".75em")
-		.text(function(d) { return d.value; });
+		.text(function(d) { return d.value; });*/
 
 })();
 
