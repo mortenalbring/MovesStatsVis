@@ -62,6 +62,9 @@ function getDate(d) {
 	});
 
 
+	var color = d3.scale.linear()
+		.domain([0,4500,9000,13500,18000])
+		.range(["red","orange", "yellow","green","blue"]);
 
 	var width = 600,
 		height = 500;
@@ -124,7 +127,9 @@ function getDate(d) {
 	bar.append("rect")
 		.attr("y", function(d) { return y(d.value); })
 		.attr("height", function(d) { return height - y(d.value); })
-		.attr("width", barWidth - 1);
+		.attr("width", barWidth - 1)
+	.attr("fill", function(d) {return color(d.value);} );
+
 
 /*	bar.append("text")
 		.attr("x", function(d) {return x(d.date)})

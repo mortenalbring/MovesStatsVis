@@ -24,7 +24,12 @@
     shape-rendering: crispEdges;
 }
 .chart rect {
-    fill: steelblue;
+
+}
+
+.chart {
+    background: lightblue;
+
 }
 
 .chart text {
