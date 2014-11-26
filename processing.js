@@ -1,11 +1,19 @@
+function getDate(d) {
+	return new Date(d.date);
+}
+
 (function() {
-	var	parseDate = d3.time.format("%Y-%m").parse;
+	var	parseDate = d3.time.format("%Y-%m-%d").parse;
 	var format = d3.time.format("%Y-%m-%d").parse;
 
 
 	var computedDataArray = [];
 
+	var minDate;
+	var maxDate;
+
 	for(var i=0;i<summaryObject.length;i++) {
+
 
 		var computedData = {};
 
@@ -18,10 +26,18 @@
 		var comday = datapoint.date.substring(6,8);
 
 
-		var newdate = new Date(comyear,commonth,comday);
+		var newdate = new Date(comyear,(commonth-1),comday);
 
-		computedData.date = comyear + "-" + commonth + "-" +comday;
 
+
+
+		computedData.date = comyear + "-" + (commonth-1) + "-" +comday;
+		if (i == 0) {
+			minDate = parseDate(computedData.date);
+		}
+		if (i == (summaryObject.length-1)) {
+			maxDate = parseDate(computedData.date);
+		}
 		var walkingDistance = 0;
 
 		for(var j=0;j<datapoint.summary.length;j++) {
@@ -38,27 +54,7 @@
 
 	}
 
-
-	var testvalues =d3.values(computedDataArray);
-
-	var testvalues2 = d3.values(testvalues);
-
-
-	for(var ttt = 0;ttt<testvalues.length;ttt++) {
-
-		var testentry = testvalues[ttt];
-
-		var xxxxxx  = 42;
-
-
-	}
-
-
-	var testdata = d3.values(computedDataArray);
-
-	var maxxx = d3.max(d3.values(computedDataArray));
-
-
+	var blarg = "moop";
 
 	computedDataArray.forEach(function(d) {
 		d.date = parseDate(d.date);
@@ -70,9 +66,9 @@
 	var width = 960,
 		height = 500;
 
-	var margin = {top: 20, right: 30, bottom: 30, left: 60};
+	var margin = {top: 20, right: 30, bottom: 100, left: 60};
 
-	var x = d3.scale.ordinal().rangeRoundBands([0,width],.1);
+	var x = d3.time.scale().domain([minDate,maxDate]).range([0,width]);
 
 	var y = d3.scale.linear()
 		.domain([0,20000])
@@ -124,7 +120,7 @@
 		.attr("width", barWidth - 1);
 
 	bar.append("text")
-		.attr("x", x.rangeBand() / 2)
+		.attr("x", function(d) {return x(d.date)})
 		.attr("y", function(d) { return y(d.value) + 3; })
 		.attr("dy", ".75em")
 		.text(function(d) { return d.value; });
